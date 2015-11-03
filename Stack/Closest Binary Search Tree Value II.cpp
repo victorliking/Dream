@@ -9,6 +9,15 @@ Follow up:
 Assume that the BST is balanced, could you solve it in less than O(n) runtime (where n = total nodes)?
 */
 
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
 class Solution {
 public:
     vector<int> closestKValues(TreeNode* root, double target, int k) {
@@ -17,8 +26,11 @@ public:
         stack<int> s2;
         inorder(root,target,false,s1);
         inorder(root,target,true,s2);
-
-        while(k-- >0){
+        while(!s1.empty()) cout<<s1.top()<<' ',s1.pop();
+        cout<<endl;
+        while(!s2.empty()) cout<<s2.top()<<' ',s2.pop();
+        //cout<<endl;
+        while(k--){
             if(s1.empty()) ret.push_back(s2.top()),s2.pop();
             else if (s2.empty()) ret.push_back(s1.top()),s1.pop();
             else if (abs(s1.top()-target)<abs(s2.top()-target))
@@ -31,9 +43,9 @@ public:
 
     void inorder(TreeNode* root, double target, bool re, stack<int>&stk){
         if(root==nullptr) return;
-        inorder(reverse?root->right:root->left,target,reverse,stk);
+        inorder(re?root->right:root->left,target,re,stk);
+        if((re&&root->val<=target)||(!re&&root->val>target)) return;
         stk.push(root->val);
-        inorder(reverse?root->left:root->right,target,reverse,stk);
+        inorder(re?root->left:root->right,target,re,stk);
     }
-
 };
